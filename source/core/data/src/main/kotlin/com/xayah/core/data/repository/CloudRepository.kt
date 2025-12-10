@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.annotation.StringRes
 import com.xayah.core.database.dao.CloudDao
 import com.xayah.core.datastore.readCloudActivatedAccountName
+import com.xayah.core.model.CloudType
 import com.xayah.core.model.database.CloudEntity
 import com.xayah.core.network.client.CloudClient
 import com.xayah.core.network.client.getCloud
@@ -106,8 +107,12 @@ class CloudRepository @Inject constructor(
 
     suspend fun getClient(name: String? = null): Pair<CloudClient, CloudEntity> {
         val entity = queryByName(name ?: context.readCloudActivatedAccountName().first())
-        if (entity != null) if (entity.remote.isEmpty()) throw IllegalAccessException("${entity.name}: Remote directory is not set.")
-        val client = entity?.getCloud()?.apply { connect() } ?: throw NullPointerException("Client is null.")
+        if (entity != null) {
+            if (entity.type != CloudType.GOOGLE_DRIVE && entity.remote.isEmpty()) {
+                throw IllegalAccessException("${entity.name}: Remote directory is not set.")
+            }
+        }
+        val client = entity?.getCloud(context)?.apply { connect() } ?: throw NullPointerException("Client is null.")
         return client to entity
     }
 
@@ -120,8 +125,10 @@ class CloudRepository @Inject constructor(
     suspend fun withActivatedClients(block: suspend (clients: List<Pair<CloudClient, CloudEntity>>) -> Unit) = run {
         val clients: MutableList<Pair<CloudClient, CloudEntity>> = mutableListOf()
         cloudDao.queryActivated().forEach {
-            if (it.remote.isEmpty()) throw IllegalAccessException("${it.name}: Remote directory is not set.")
-            clients.add(it.getCloud().apply { connect() } to it)
+            if (it.type != com.xayah.core.model.CloudType.GOOGLE_DRIVE && it.remote.isEmpty()) {
+                throw IllegalAccessException("${it.name}: Remote directory is not set.")
+            }
+            clients.add(it.getCloud(context).apply { connect() } to it)
         }
         block(clients)
         clients.forEach { it.first.disconnect() }

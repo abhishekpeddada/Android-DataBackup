@@ -26,6 +26,7 @@ import com.xayah.core.util.GsonUtil
 import com.xayah.core.util.decodeURL
 import com.xayah.feature.main.cloud.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 data class IndexUiState(
@@ -57,6 +58,7 @@ sealed class IndexUiIntent : UiIntent {
 @ExperimentalMaterial3Api
 @HiltViewModel
 class IndexViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val cloudRepo: CloudRepository,
     args: SavedStateHandle,
 ) : BaseViewModel<IndexUiState, IndexUiIntent, IndexUiEffect>(
@@ -187,7 +189,7 @@ class IndexViewModel @Inject constructor(
                     )
                 )
                 runCatching {
-                    val client = state.cloudEntity!!.getCloud()
+                    val client = state.cloudEntity!!.getCloud(context)
                     client.testConnection()
                     emitEffect(IndexUiEffect.DismissSnackbar)
                     emitEffectOnIO(IndexUiEffect.ShowSnackbar(type = SnackbarType.Success, message = cloudRepo.getString(R.string.connection_established)))
@@ -218,7 +220,7 @@ class IndexViewModel @Inject constructor(
                     )
                 )
                 runCatching {
-                    val client = uiState.value.cloudEntity!!.getCloud()
+                    val client = uiState.value.cloudEntity!!.getCloud(context)
                     client.setRemote(
                         context = context,
                         onSet = { remote, extraString ->

@@ -85,15 +85,7 @@ class ListDataRepo @Inject constructor(
                 userMap = usersRepo.getUsersMap(opType, cloudName, backupDir)
 
                 listData = getAppListData()
-                pkgUserSet = when (opType) {
-                    OpType.BACKUP -> {
-                        appsRepo.getBackups(filters)
-                    }
-
-                    OpType.RESTORE -> {
-                        appsRepo.getInstalledApps(userList)
-                    }
-                }
+                pkgUserSet = appsRepo.getBackups(filters)
                 appList = appsRepo.getApps(opType = opType, listData = listData, pkgUserSet = pkgUserSet, refs = labelAppRefs, labels = labels, cloudName = cloudName, backupDir = backupDir)
             }
 

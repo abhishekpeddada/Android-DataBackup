@@ -46,6 +46,7 @@ import com.xayah.core.rootservice.service.RemoteRootService
 import com.xayah.core.util.ConfigsPackageRestoreName
 import com.xayah.core.util.DateUtil
 import com.xayah.core.util.IconRelativeDir
+import com.xayah.core.util.LogUtil
 import com.xayah.core.util.PathUtil
 import com.xayah.core.util.command.BaseUtil
 import com.xayah.core.util.command.PackageUtil
@@ -516,24 +517,36 @@ class AppsRepo @Inject constructor(
                     onLoad(index, paths.size, fileName)
                     if (fileName == ConfigsPackageRestoreName) {
                         runCatching {
+                            LogUtil.log { "AppsRepo" to "Found config file: ${pathParcelable.pathString}" }
                             cloudRepo.download(client = client, src = pathParcelable.pathString, dstDir = tmpDir) { path ->
+                                LogUtil.log { "AppsRepo" to "Download callback received, path: $path" }
                                 rootService.readJson<PackageEntity>(path).also { p ->
+                                    LogUtil.log { "AppsRepo" to "Parsed JSON, package: ${p?.packageName}, userId: ${p?.userId}" }
                                     p?.id = 0
                                     p?.extraInfo?.activated = false
                                     p?.indexInfo?.cloud = entity.name
-                                    p?.indexInfo?.backupDir = remote
+                                   p?.indexInfo?.backupDir = remote
                                     parsePreserveAndUserId(pathParcelable).also { result ->
+                                        LogUtil.log { "AppsRepo" to "ParsePreserveAndUserId result: $result" }
                                         result?.also { (pId, uId) ->
                                             p?.indexInfo?.preserveId = pId
                                             p?.indexInfo?.userId = uId
+                                            LogUtil.log { "AppsRepo" to "Set userId to: $uId, preserveId to: $pId" }
                                         }
                                     }
                                 }?.apply {
+                                    LogUtil.log { "AppsRepo" to "About to check if app exists in DB: $packageName" }
                                     if (appsDao.query(packageName, indexInfo.opType, userId, preserveId, indexInfo.compressionType, indexInfo.cloud, indexInfo.backupDir) == null) {
+                                        LogUtil.log { "AppsRepo" to "Inserting app into DB: $packageName, cloud: ${indexInfo.cloud}, backupDir: ${indexInfo.backupDir}, userId: $userId" }
                                         appsDao.upsert(this)
+                                    } else {
+                                        LogUtil.log { "AppsRepo" to "App already exists in DB, skipping: $packageName" }
                                     }
                                 }
                             }
+                        }.onFailure {
+                            LogUtil.log { "AppsRepo" to "ERROR loading cloud app: ${it.message}" }
+                            it.printStackTrace()
                         }
                     }
                 }

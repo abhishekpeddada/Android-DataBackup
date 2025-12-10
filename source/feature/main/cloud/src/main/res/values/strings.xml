@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Google Drive Setup -->
+    <string name="google_drive_setup">Google Drive Setup</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_in_with_google_desc">Authenticate with your Google account to access Google Drive</string>
+    <string name="not_signed_in">Not signed in</string>
+    <string name="backup_folder">Backup folder</string>
+    <string name="backup_folder_desc">Select the folder in Google Drive where backups will be stored</string>
+    <string name="sign_in_failed">Sign-in failed: %1$s</string>
+</resources>

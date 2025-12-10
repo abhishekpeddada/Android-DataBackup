@@ -18,6 +18,10 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:util"))
 
+    // Google Drive & Auth for GoogleDriveSetup UI
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
+    implementation("com.google.apis:google-api-services-drive:v3-rev20240914-2.0.0")
+    
     // Compose Navigation
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)

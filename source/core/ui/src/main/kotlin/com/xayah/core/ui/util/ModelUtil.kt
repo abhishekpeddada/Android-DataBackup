@@ -1,6 +1,7 @@
 package com.xayah.core.ui.util
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Cloud
 import androidx.compose.material.icons.rounded.Lan
 import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material.icons.rounded.Storage
@@ -19,6 +20,7 @@ val CloudType.icon: ImageVector
             CloudType.WEBDAV -> Icons.Rounded.Language
             CloudType.SMB -> Icons.Rounded.Storage
             CloudType.SFTP -> Icons.Rounded.Lan
+            CloudType.GOOGLE_DRIVE -> Icons.Rounded.Cloud
         }
     }
 

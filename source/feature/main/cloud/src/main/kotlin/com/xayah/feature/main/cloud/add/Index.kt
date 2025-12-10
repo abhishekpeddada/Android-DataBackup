@@ -69,6 +69,12 @@ fun PageCloudAddAccount() {
                 ) {
                     navController.navigateSingle(MainRoutes.SFTPSetup.getRoute(encodedURLWithSpace))
                 }
+                Clickable(
+                    icon = CloudType.GOOGLE_DRIVE.icon,
+                    title = CloudType.GOOGLE_DRIVE.title,
+                ) {
+                    navController.navigateSingle(MainRoutes.GoogleDriveSetup.getRoute(encodedURLWithSpace))
+                }
             }
         }
     }

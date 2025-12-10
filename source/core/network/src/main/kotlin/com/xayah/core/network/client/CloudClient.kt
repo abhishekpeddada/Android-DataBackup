@@ -4,6 +4,7 @@ import android.content.Context
 import com.xayah.core.model.CloudType
 import com.xayah.core.model.database.CloudEntity
 import com.xayah.core.model.database.FTPExtra
+import com.xayah.core.model.database.GoogleDriveExtra
 import com.xayah.core.model.database.SFTPExtra
 import com.xayah.core.model.database.SMBExtra
 import com.xayah.core.model.database.WebDAVExtra
@@ -31,7 +32,7 @@ interface CloudClient {
     suspend fun setRemote(context: Context, onSet: suspend (remote: String, extra: String) -> Unit)
 }
 
-fun CloudEntity.getCloud() = when (this.type) {
+fun CloudEntity.getCloud(context: Context) = when (this.type) {
     CloudType.FTP -> {
         val extra = getExtraEntity<FTPExtra>()!!
         FTPClientImpl(this, extra)
@@ -50,5 +51,10 @@ fun CloudEntity.getCloud() = when (this.type) {
     CloudType.SFTP -> {
         val extra = getExtraEntity<SFTPExtra>()!!
         SFTPClientImpl(this, extra)
+    }
+
+    CloudType.GOOGLE_DRIVE -> {
+        val extra = getExtraEntity<GoogleDriveExtra>()!!
+        GoogleDriveClientImpl(context, this, extra)
     }
 }

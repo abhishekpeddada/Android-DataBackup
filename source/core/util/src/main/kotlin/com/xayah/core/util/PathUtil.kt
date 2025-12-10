@@ -41,8 +41,7 @@ class PathUtil @Inject constructor(
          */
         fun getParentPath(path: String): String {
             if (path.contains('/').not() || path == "/") return ""
-            val child = path.substring(path.lastIndexOf('/'))
-            return path.replace(child, "")
+            return path.substring(0, path.lastIndexOf('/'))
         }
 
         /**
@@ -87,13 +86,13 @@ class PathUtil @Inject constructor(
 
     fun getCloudTmpDir(): String = context.cloudTmpAbsoluteDir()
     fun getPackageIconPath(packageName: String, adaptive: Boolean): String = getPackageIconPath(context, packageName, adaptive)
-    private fun getConfigsDir(parent: String): String = "${parent}/${getConfigsRelativeDir()}"
+    private fun getConfigsDir(parent: String): String = if (parent.isEmpty()) getConfigsRelativeDir() else "${parent}/${getConfigsRelativeDir()}"
     fun getLocalBackupConfigsDir(): String = getConfigsDir(parent = context.localBackupSaveDir())
     fun getCloudTmpConfigsDir(): String = getConfigsDir(parent = context.cloudTmpAbsoluteDir())
     fun getCloudRemoteConfigsDir(remote: String): String = getConfigsDir(parent = remote)
 
-    private fun getAppsDir(parent: String): String = "${parent}/${getAppsRelativeDir()}"
-    private fun getFilesDir(parent: String): String = "${parent}/${getFilesRelativeDir()}"
+    private fun getAppsDir(parent: String): String = if (parent.isEmpty()) getAppsRelativeDir() else  "${parent}/${getAppsRelativeDir()}"
+    private fun getFilesDir(parent: String): String = if (parent.isEmpty()) getFilesRelativeDir() else "${parent}/${getFilesRelativeDir()}"
     fun getLocalBackupAppsDir(): String = getAppsDir(parent = context.localBackupSaveDir())
     fun getCloudTmpAppsDir(): String = getAppsDir(parent = context.cloudTmpAbsoluteDir())
     fun getCloudRemoteAppsDir(remote: String): String = getAppsDir(parent = remote)

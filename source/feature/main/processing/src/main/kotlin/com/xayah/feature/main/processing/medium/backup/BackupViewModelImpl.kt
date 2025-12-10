@@ -77,7 +77,7 @@ class BackupViewModelImpl @Inject constructor(
                         )
                     )
                     runCatching {
-                        val client = state.cloudEntity!!.getCloud()
+                        val client = state.cloudEntity!!.getCloud(mContext)
                         client.testConnection()
                         emitEffect(IndexUiEffect.DismissSnackbar)
                         withMainContext {

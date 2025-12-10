@@ -1,5 +1,6 @@
 package com.xayah.feature.main.cloud
 
+import android.content.Context
 import androidx.compose.material3.ExperimentalMaterial3Api
 import com.xayah.core.data.repository.CloudRepository
 import com.xayah.core.model.database.CloudEntity
@@ -11,6 +12,7 @@ import com.xayah.core.ui.viewmodel.IndexUiEffect
 import com.xayah.core.ui.viewmodel.UiIntent
 import com.xayah.core.ui.viewmodel.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
@@ -26,6 +28,7 @@ sealed class IndexUiIntent : UiIntent {
 @ExperimentalMaterial3Api
 @HiltViewModel
 class IndexViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val cloudRepo: CloudRepository,
 ) : BaseViewModel<IndexUiState, IndexUiIntent, IndexUiEffect>(IndexUiState(isProcessing = false)) {
     override suspend fun onEvent(state: IndexUiState, intent: IndexUiIntent) {
@@ -41,7 +44,7 @@ class IndexViewModel @Inject constructor(
                     )
                 )
                 runCatching {
-                    val client = intent.entity.getCloud()
+                    val client = intent.entity.getCloud(context)
                     client.testConnection()
                     emitEffect(IndexUiEffect.DismissSnackbar)
                     emitEffectOnIO(IndexUiEffect.ShowSnackbar(type = SnackbarType.Success, message = cloudRepo.getString(R.string.connection_established)))

@@ -1,5 +1,6 @@
 package com.xayah.core.model.database
 
+import androidx.annotation.Keep
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.xayah.core.model.CloudType
@@ -25,8 +26,15 @@ data class SFTPExtra(
     val mode: SFTPAuthMode = SFTPAuthMode.PASSWORD,
 )
 
+@Keep
 data class WebDAVExtra(
-    val insecure: Boolean,
+    val insecure: Boolean = false
+)
+
+@Keep
+data class GoogleDriveExtra(
+    val accountEmail: String = "",
+    val folderId: String = "", // Root folder ID for backups
 )
 
 @Entity
