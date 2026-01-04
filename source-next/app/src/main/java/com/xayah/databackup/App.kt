@@ -9,6 +9,7 @@ import com.xayah.databackup.data.ContactRepository
 import com.xayah.databackup.data.FileRepository
 import com.xayah.databackup.data.MessageRepository
 import com.xayah.databackup.data.NetworkRepository
+import com.xayah.databackup.feature.backup.BackupConfigViewModel
 import com.xayah.databackup.feature.backup.BackupProcessViewModel
 import com.xayah.databackup.feature.backup.BackupSetupViewModel
 import com.xayah.databackup.feature.backup.apps.AppsViewModel
@@ -17,6 +18,9 @@ import com.xayah.databackup.feature.backup.contacts.ContactsViewModel
 import com.xayah.databackup.feature.backup.messages.MessagesViewModel
 import com.xayah.databackup.feature.backup.networks.NetworksViewModel
 import com.xayah.databackup.service.util.BackupAppsHelper
+import com.xayah.databackup.service.util.BackupCallLogsHelper
+import com.xayah.databackup.service.util.BackupContactsHelper
+import com.xayah.databackup.service.util.BackupMessagesHelper
 import com.xayah.databackup.service.util.BackupNetworksHelper
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -42,9 +46,13 @@ class App : Application() {
         singleOf(::BackupProcessRepository) bind BackupProcessRepository::class
         singleOf(::BackupAppsHelper) bind BackupAppsHelper::class
         singleOf(::BackupNetworksHelper) bind BackupNetworksHelper::class
+        singleOf(::BackupContactsHelper) bind BackupContactsHelper::class
+        singleOf(::BackupCallLogsHelper) bind BackupCallLogsHelper::class
+        singleOf(::BackupMessagesHelper) bind BackupMessagesHelper::class
 
         viewModelOf(::BackupSetupViewModel)
         viewModelOf(::BackupProcessViewModel)
+        viewModelOf(::BackupConfigViewModel)
         viewModelOf(::AppsViewModel)
         viewModelOf(::NetworksViewModel)
         viewModelOf(::ContactsViewModel)

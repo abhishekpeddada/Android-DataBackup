@@ -20,6 +20,10 @@ object PathHelper {
     private const val SUBDIR_EXT_DATA = "ext_data"
     private const val SUBDIR_ADDL_DATA = "addl_data"
     private const val SUBDIR_NETWORKS = "networks"
+    private const val SUBDIR_CONTACTS = "contacts"
+    private const val SUBDIR_CALL_LOGS = "call_logs"
+    private const val SUBDIR_MESSAGES = "messages"
+    private const val SUBDIR_APP_PARTS = "app_parts"
 
     private const val CONFIG_FILE_SUFFIX = ".config"
 
@@ -31,6 +35,10 @@ object PathHelper {
     private const val MEDIA_FILE_NAME = "media.tar.zst"
 
     private const val NETWORKS_PREFIX = "networks_"
+    private const val CONTACTS_PREFIX = "contacts_"
+    private const val CALL_LOGS_PREFIX = "call_logs_"
+    private const val MESSAGES_SMS_PREFIX = "messages_sms_"
+    private const val MESSAGES_MMS_PREFIX = "messages_mms_"
 
     /**
      * Returns the parent path, or empty string if this path does not have a parent.
@@ -60,6 +68,10 @@ object PathHelper {
     fun getBackupAppsExtDataDir(parent: String, packageName: String): String = "$parent/$SUBDIR_APPS/$packageName/$SUBDIR_EXT_DATA"
     fun getBackupAppsAddlDataDir(parent: String, packageName: String): String = "$parent/$SUBDIR_APPS/$packageName/$SUBDIR_ADDL_DATA"
     fun getBackupNetworksDir(parent: String): String = "$parent/$SUBDIR_NETWORKS"
+    fun getBackupContactsDir(parent: String): String = "$parent/$SUBDIR_CONTACTS"
+    fun getBackupCallLogsDir(parent: String): String = "$parent/$SUBDIR_CALL_LOGS"
+    fun getBackupMessagesDir(parent: String): String = "$parent/$SUBDIR_MESSAGES"
+    fun getBackupAppPartsDir(parent: String): String = "$parent/$SUBDIR_APP_PARTS"
 
     fun getBackupAppsApkFilePath(parent: String, packageName: String): String =
         "${getBackupAppsApkDir(parent, packageName)}/$APK_FILE_NAME"
@@ -81,6 +93,18 @@ object PathHelper {
 
     fun getBackupNetworksConfigFilePath(parent: String, timestamp: Long): String =
         "${getBackupNetworksDir(parent)}/$NETWORKS_PREFIX${TimeHelper.formatTimestampInDetail(timestamp)}$CONFIG_FILE_SUFFIX"
+
+    fun getBackupContactsConfigFilePath(parent: String, timestamp: Long): String =
+        "${getBackupContactsDir(parent)}/$CONTACTS_PREFIX${TimeHelper.formatTimestampInDetail(timestamp)}$CONFIG_FILE_SUFFIX"
+
+    fun getBackupCallLogsConfigFilePath(parent: String, timestamp: Long): String =
+        "${getBackupCallLogsDir(parent)}/$CALL_LOGS_PREFIX${TimeHelper.formatTimestampInDetail(timestamp)}$CONFIG_FILE_SUFFIX"
+
+    fun getBackupMessagesSmsConfigFilePath(parent: String, timestamp: Long): String =
+        "${getBackupMessagesDir(parent)}/$MESSAGES_SMS_PREFIX${TimeHelper.formatTimestampInDetail(timestamp)}$CONFIG_FILE_SUFFIX"
+
+    fun getBackupMessagesMmsConfigFilePath(parent: String, timestamp: Long): String =
+        "${getBackupMessagesDir(parent)}/$MESSAGES_MMS_PREFIX${TimeHelper.formatTimestampInDetail(timestamp)}$CONFIG_FILE_SUFFIX"
 
     fun getBackupPath(): Flow<String> = App.application.readString(BackupPath)
     fun getBackupPathBackups(): Flow<String> = getBackupPath().map { "${it.trimEnd('/')}/$SUBDIR_BACKUPS" }
